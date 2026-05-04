@@ -1,0 +1,6 @@
+if SHIELD_BT65
+
+config ZMK_KEYBOARD_NAME
+	default "BT65"
+
+endif

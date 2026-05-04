@@ -1,0 +1,195 @@
+/*
+ * BT65 68键键盘 - Nice!Nano (nRF52840) 设备树定义
+ *
+ * ⚠️ 重要提示：以下 GPIO 引脚为示例占位符！
+ *    你需要根据实际 PCB 矩阵接线来修改 row-gpios 和 col-gpios 的值。
+ *
+ * 引脚编号参考 (Nice!Nano v2):
+ *   P0.XX -> &gpio0 XX
+ *   P1.XX -> &gpio1 XX
+ *
+ * Nice!Nano v2 可用引脚示例：
+ *   P0.02 (D3),  P0.03 (D4),  P0.04 (D5),  P0.05 (D6),
+ *   P0.06 (D7),  P0.07 (D8),  P0.08 (D9),  P0.09 (D10),
+ *   P1.15 (D15), P1.13 (D14), P0.10 (RX),  P0.20 (TX),
+ *   P0.22 (D20), P0.19 (D19), P0.30 (D18), P0.28 (D17),
+ *   P0.31 (D16), P0.12 (MISO), P0.13 (MOSI), P0.15 (SCK)
+ *   P0.17 (A0),  P0.20 (A1),  P0.15 (A2),  P0.13 (A3),
+ *   P0.24 (A4),  P0.25 (A5),  P0.26 (A6),  P0.27 (A7)
+ *
+ * RGB 相关引脚（示例，请根据实际接线修改）：
+ *   ⚠️ rgb-dat-pin   - WS2812 数据输入引脚（示例：P0.17/A0）
+ *   ⚠️ rgb-pwr-pin   - RGB 电源控制引脚（高电平开启供电，示例：P0.27/A7）
+ *
+ * LED 指示灯引脚（示例，请根据实际接线修改）：
+ *   ⚠️ chg_led_pin  - 充电指示灯引脚（示例：P0.24/A4，低电平亮）
+ *   ⚠️ out_led_pin  - 输出模式指示灯引脚（示例：P0.26/A6，低电平亮）
+ *                       蓝牙连接时闪烁，USB连接时常亮，未连接时熄灭
+ */
+
+#include <dt-bindings/zmk/matrix_transform.h>
+
+/ {
+    chosen {
+        zmk,kscan = &kscan0;
+        zmk,physical-layout = &default_layout;
+        zmk,leds = &leds_status;          /* 指示灯集合 */
+    };
+
+    /* ====================================================
+     * ⚠️ 以下引脚是示例值！
+     *    请根据你的实际 PCB 走线修改 row-gpios 和 col-gpios
+     *
+     * 假设：5行 R0-R4，15列 C0-C14
+     * ==================================================== */
+    kscan0: kscan {
+        compatible = "zmk,kscan-gpio-matrix";
+        label = "KSCAN";
+
+        diode-direction = "col2row";
+            /* 二极管方向：col2row = 列到行（最常见）
+             * 如果实际是 row2col，请修改 */
+
+        /* ⚠️ 行引脚 - 请根据实际接线修改 */
+        row-gpios
+            = <&gpio0 2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // R0: P0.02 (D3)
+            , <&gpio0 3 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // R1: P0.03 (D4)
+            , <&gpio0 4 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // R2: P0.04 (D5)
+            , <&gpio0 5 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // R3: P0.05 (D6)
+            , <&gpio0 6 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // R4: P0.06 (D7)
+            ;
+
+        /* ⚠️ 列引脚 - 请根据实际接线修改 */
+        col-gpios
+            = <&gpio0 7  GPIO_ACTIVE_HIGH>   // C0: P0.07 (D8)
+            , <&gpio0 8  GPIO_ACTIVE_HIGH>   // C1: P0.08 (D9)
+            , <&gpio0 9  GPIO_ACTIVE_HIGH>   // C2: P0.09 (D10)
+            , <&gpio1 15 GPIO_ACTIVE_HIGH>   // C3: P1.15 (D15)
+            , <&gpio1 13 GPIO_ACTIVE_HIGH>   // C4: P1.13 (D14)
+            , <&gpio0 10 GPIO_ACTIVE_HIGH>   // C5: P0.10 (RX)
+            , <&gpio0 20 GPIO_ACTIVE_HIGH>   // C6: P0.20 (TX)
+            , <&gpio0 22 GPIO_ACTIVE_HIGH>   // C7: P0.22 (D20)
+            , <&gpio0 19 GPIO_ACTIVE_HIGH>   // C8: P0.19 (D19)
+            , <&gpio0 30 GPIO_ACTIVE_HIGH>   // C9: P0.30 (D18)
+            , <&gpio0 28 GPIO_ACTIVE_HIGH>   // C10: P0.28 (D17)
+            , <&gpio0 31 GPIO_ACTIVE_HIGH>   // C11: P0.31 (D16)
+            , <&gpio1 9  GPIO_ACTIVE_HIGH>   // C12: P1.09 (A2)
+            , <&gpio1 10 GPIO_ACTIVE_HIGH>   // C13: P1.10 (A3)
+            , <&gpio1 11 GPIO_ACTIVE_HIGH>   // C14: P1.11 (A4)
+            ;
+    };
+
+    /* ====================================================
+     * WS2812 RGB LED 定义
+     *
+     * ⚠️ chain-length：根据实际灯珠数量修改
+     * ⚠️ rgb-dat-pin：根据实际连接的 GPIO 修改
+     * ==================================================== */
+    leds: leds {
+        compatible = "zmk,underglow";
+        label = "RGB_LED";
+        chain-length = <68>;                  /* ⚠️ 灯珠数量，请按实际修改 */
+        rgb-dat-pin = <&gpio0 17>;            /* ⚠️ WS2812 数据引脚 示例P0.17(A0)，请按实际修改 */
+    };
+
+    /* ====================================================
+     * RGB 电源控制 GPIO
+     * 用一个 GPIO 控制 MOSFET/VREG 给 RGB 供电
+     *
+     * ⚠️ gpios 引脚需根据实际接线修改
+     *    GPIO_ACTIVE_HIGH = 高电平开启供电
+     *    如果电路是低电平开启供电，改为 GPIO_ACTIVE_LOW
+     * ⚠️ 如果不需要电源控制，可以删除此节点
+     * ==================================================== */
+    rgb_pwr: rgb_power {
+        compatible = "zmk,output-gpio";
+        label = "RGB_POWER";
+        gpios = <&gpio0 27 GPIO_ACTIVE_HIGH>; /* ⚠️ RGB 电源控制引脚 示例P0.27(A7)，请按实际修改 */
+        init-high;                             /* 上电默认开启 RGB 供电 */
+    };
+
+    /* ====================================================
+     * LED 指示灯定义
+     *
+     * 1. 充电指示灯（chg_led）— 充电时亮，充满灭
+     *    nRF52840 检测到 USB 供电时自动亮起
+     *
+     * 2. 输出模式指示灯（out_led）— 三合一
+     *    蓝牙连接：慢速闪烁（300ms 间隔呼吸效果）
+     *    USB 连接：常亮
+     *    未连接/待机：熄灭
+     *
+     * ⚠️ 以下引脚均为示例值！
+     *    请根据实际 PCB 设计修改 gpios 引脚
+     * ==================================================== */
+    leds_status: leds {
+        compatible = "gpio-leds";
+
+        /* 充电指示灯 — USB 连接时亮起 */
+        chg_led: led_0 {
+            gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
+        };
+
+        /* 输出模式指示灯 — 蓝牙/USB/未连接 */
+        out_led: led_1 {
+            gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
+        };
+    };
+
+    /* ====================================================
+     * 矩阵变换 - 将物理按键位置映射到矩阵行列
+     *
+     * 68键布局（5行 x 15列），物理排布如下：
+     *
+     * Row 0: Esc(0,0)  1(0,1)  2(0,2)  3(0,3)  4(0,4)  5(0,5)  6(0,6)  7(0,7)  8(0,8)  9(0,9)  0(0,10) -(0,11) =(0,12) Bspc(0,13) `(0,14)
+     * Row 1: Tab(1,0)  Q(1,1)  W(1,2)  E(1,3)  R(1,4)  T(1,5)  Y(1,6)  U(1,7)  I(1,8)  O(1,9)  P(1,10) [(1,11) ](1,12) \(1,13)  Del(1,14)
+     * Row 2: Caps(2,0) A(2,1)  S(2,2)  D(2,3)  F(2,4)  G(2,5)  H(2,6)  J(2,7)  K(2,8)  L(2,9)  ;(2,10)  '(2,11) Enter(2,12)        PgUp(2,14)
+     * Row 3: Shift(3,0)Z(3,1)  X(3,2)  C(3,3)  V(3,4)  B(3,5)  N(3,6)  M(3,7)  ,(3,8)  .(3,9)  /(3,10)  Shift(3,11) ↑(3,13)      PgDn(3,14)
+     * Row 4: Ctrl(4,0) GUI(4,1) Alt(4,2)        Space(4,3~4,9)             Alt(4,10) Fn(4,11) Ctrl(4,12)  ←(4,13) ↓(4,14) →(4,15*)
+     *
+     * ⚠️ 注意：C13~C15 列仅用于右侧功能键和方向键区域
+     * ==================================================== */
+    default_transform: keymap_transform0 {
+        compatible = "zmk,matrix-transform";
+        columns = <15>;
+        rows = <5>;
+        map = <
+            RC(0,0)  RC(0,1)  RC(0,2)  RC(0,3)  RC(0,4)  RC(0,5)  RC(0,6)  RC(0,7)  RC(0,8)  RC(0,9)  RC(0,10) RC(0,11) RC(0,12) RC(0,13) RC(0,14)
+            RC(1,0)  RC(1,1)  RC(1,2)  RC(1,3)  RC(1,4)  RC(1,5)  RC(1,6)  RC(1,7)  RC(1,8)  RC(1,9)  RC(1,10) RC(1,11) RC(1,12) RC(1,13) RC(1,14)
+            RC(2,0)  RC(2,1)  RC(2,2)  RC(2,3)  RC(2,4)  RC(2,5)  RC(2,6)  RC(2,7)  RC(2,8)  RC(2,9)  RC(2,10) RC(2,11) RC(2,12) RC(2,13) RC(2,14)
+            RC(3,0)  RC(3,1)  RC(3,2)  RC(3,3)  RC(3,4)  RC(3,5)  RC(3,6)  RC(3,7)  RC(3,8)  RC(3,9)  RC(3,10) RC(3,11) RC(3,12) RC(3,13) RC(3,14)
+            RC(4,0)  RC(4,1)  RC(4,2)  RC(4,3)  RC(4,4)  RC(4,5)  RC(4,6)  RC(4,7)  RC(4,8)  RC(4,9)  RC(4,10) RC(4,11) RC(4,12) RC(4,13) RC(4,14)
+        >;
+    };
+
+    /* 物理布局定义 */
+    default_layout: default_layout {
+        compatible = "zmk,physical-layout";
+        display-name = "Default Layout";
+        transform = <&default_transform>;
+        kscan = <&kscan0>;
+    };
+
+    /* ====================================================
+     * ZMK Studio 解锁配置
+     *
+     * Studio 通过 USB 连接后默认锁定，需要物理按键解锁
+     * 此处定义使用 N 和 M 键同时按下作为解锁组合
+     *（选择字母区中间位置，方便操作且不易误触）
+     *
+     * ⚠️ 请根据实际矩阵接线修改 row/col 值！
+     * 默认假设：
+     *   N 键在 Row3, Col6
+     *   M 键在 Row3, Col7
+     * ==================================================== */
+    studio_unlock: studio_unlock {
+        compatible = "zmk,studio-unlock";
+        label = "STUDIO_UNLOCK";
+        /* 同时按下以下两个键解锁 Studio */
+        row = <3>;
+        col = <6>;
+        /* 第二个键 */
+        row2 = <3>;
+        col2 = <7>;
+    };
+};
