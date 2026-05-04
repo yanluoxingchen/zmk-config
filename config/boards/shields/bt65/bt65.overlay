@@ -28,6 +28,11 @@
  */
 
 #include <dt-bindings/zmk/matrix_transform.h>
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/outputs.h>
 
 / {
     chosen {
@@ -188,5 +193,51 @@
         /* 第二个键 */
         row2 = <3>;
         col2 = <7>;
+    };
+
+    keymap0: keymap0 {
+        compatible = "zmk,keymap";
+        label = "Default Layer";
+        bindings = <
+&kp KP_ESC &kp KP_N1 &kp KP_N2 &kp KP_N3 &kp KP_N4 &kp KP_N5 &kp KP_N6 &kp KP_N7
+&kp KP_N8 &kp KP_N9 &kp KP_N0 &kp KP_MINUS &kp KP_EQUAL &kp KP_BSPC &kp KP_GRAVE
+
+&kp KP_TAB &kp KP_Q &kp KP_W &kp KP_E &kp KP_R &kp KP_T &kp KP_Y &kp KP_U
+&kp KP_I &kp KP_O &kp KP_P &kp KP_LBKT &kp KP_RBKT &kp KP_BSLH &kp KP_DEL
+
+&kp KP_CAPS &kp KP_A &kp KP_S &kp KP_D &kp KP_F &kp KP_G &kp KP_H &kp KP_J
+&kp KP_K &kp KP_L &kp KP_SCLN &kp KP_QUOT &kp KP_ENTER &kp KP_PGUP &kp KP_PGDN
+
+&kp KP_LSHFT &kp KP_Z &kp KP_X &kp KP_C &kp KP_V &kp KP_B &kp KP_N &kp KP_M
+&kp KP_COMMA &kp KP_DOT &kp KP_FSLH &kp KP_RSHFT &kp KP_UP &kp KP_DOWN &kp KP_PGDN
+
+&kp KP_LCTRL &kp KP_LGUI &kp KP_LALT &kp KP_SPC &kp KP_SPC &kp KP_SPC &kp KP_SPC
+&kp KP_SPC &kp KP_SPC &kp KP_SPC &kp KP_SPC &kp KP_RALT &mo 1 &kp KP_RCTRL
+&kp KP_LEFT &kp KP_DOWN &kp KP_RIGHT
+        >;
+        sensor-bindings = <>;
+    };
+
+    keymap1: keymap1 {
+        compatible = "zmk,keymap";
+        label = "Fn Layer";
+        bindings = <
+&kp KP_GRAVE &kp KP_F1 &kp KP_F2 &kp KP_F3 &kp KP_F4 &kp KP_F5 &kp KP_F6 &kp KP_F7
+&kp KP_F8 &kp KP_F9 &kp KP_F10 &kp KP_F11 &kp KP_F12 &kp KP_DEL &kp KP_INS
+
+&out OUT_TOG &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &bt BT_SEL 5
+&trans &trans &trans &kp KP_PSCR &kp KP_SLCK &kp KP_PAUS &bt BT_CLR &trans
+
+&trans &trans &trans &trans &trans &trans &trans &trans
+&trans &trans &trans &trans &trans &kp KP_HOME &kp KP_END
+
+&trans &trans &trans &rgb_pwr TOGGLE &rgb_ug RGB_EFF &rgb_ug RGB_EFR &rgb_ug RGB_HUI &rgb_ug RGB_HUD
+&trans &trans &trans &trans &kp KP_VOL_UP &kp KP_VOL_DN &kp KP_BRI_UP
+
+&trans &trans &trans &kp KP_PLAY &kp KP_PLAY &kp KP_PLAY &kp KP_PLAY
+&kp KP_PLAY &kp KP_PLAY &kp KP_PLAY &kp KP_PLAY &trans &trans &trans
+&kp KP_PREV &kp KP_MUTE &kp KP_NEXT
+        >;
+        sensor-bindings = <>;
     };
 };
