@@ -27,12 +27,12 @@
  *                       蓝牙连接时闪烁，USB连接时常亮，未连接时熄灭
  */
 
-#include <dt-bindings/zmk/matrix_transform.h>
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/rgb.h>
 #include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/matrix_transform.h>
 
 / {
     chosen {
