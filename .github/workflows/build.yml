@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: zmkfirmware/zmk-build-arm:2.5
+      image: zmkfirmware/zmk-build-arm:stable
     name: Build
     steps:
       - name: Checkout
@@ -37,7 +37,7 @@ jobs:
         run: west build -s zmk/app -b nice_nano -- -DSHIELD=bt65 -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
       - name: BT65 DTS File
         if: ${{ always() }}
-        run: cat -n build/zephyr/nice_nano.dts.pre.tmp
+        run: cat -n build/zephyr/nice_nano.dts.pre.tmp 2>/dev/null || echo "DTS file not found (build may have failed)"
       - name: BT65 Kconfig file
         run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
       - name: Rename zmk.uf2

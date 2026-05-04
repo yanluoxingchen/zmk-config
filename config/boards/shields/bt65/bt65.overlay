@@ -33,7 +33,6 @@
     chosen {
         zmk,kscan = &kscan0;
         zmk,physical-layout = &default_layout;
-        zmk,leds = &leds_status;          /* 指示灯集合 */
     };
 
     /* ====================================================
@@ -109,31 +108,29 @@
     };
 
     /* ====================================================
-     * LED 指示灯定义
-     *
-     * 1. 充电指示灯（chg_led）— 充电时亮，充满灭
-     *    nRF52840 检测到 USB 供电时自动亮起
-     *
-     * 2. 输出模式指示灯（out_led）— 三合一
-     *    蓝牙连接：慢速闪烁（300ms 间隔呼吸效果）
-     *    USB 连接：常亮
-     *    未连接/待机：熄灭
+     * LED 指示灯（使用 zmk,output-gpio 控制）
      *
      * ⚠️ 以下引脚均为示例值！
      *    请根据实际 PCB 设计修改 gpios 引脚
+     *
+     * 用法（在 keymap 中）：
+     *   &chg_led TOGGLE  — 切换充电指示灯
+     *   &out_led ON      — 开启输出模式指示灯
+     *   &out_led OFF     — 关闭输出模式指示灯
      * ==================================================== */
-    leds_status: leds {
-        compatible = "gpio-leds";
 
-        /* 充电指示灯 — USB 连接时亮起 */
-        chg_led: led_0 {
-            gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;
-        };
+    /* 充电指示灯 — 低电平亮 */
+    chg_led: chg_led {
+        compatible = "zmk,output-gpio";
+        label = "CHG_LED";
+        gpios = <&gpio0 24 GPIO_ACTIVE_LOW>;  /* ⚠️ 示例P0.24(A4)，请按实际修改 */
+    };
 
-        /* 输出模式指示灯 — 蓝牙/USB/未连接 */
-        out_led: led_1 {
-            gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-        };
+    /* 输出模式指示灯（蓝牙/USB状态）— 低电平亮 */
+    out_led: out_led {
+        compatible = "zmk,output-gpio";
+        label = "OUT_LED";
+        gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;  /* ⚠️ 示例P0.26(A6)，请按实际修改 */
     };
 
     /* ====================================================
